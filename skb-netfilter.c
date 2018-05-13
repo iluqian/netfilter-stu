@@ -12,7 +12,7 @@
 static struct nf_hook_ops nfho;         //struct holding set of hook function options
 
 //function to be called by hook
-unsigned int hook_func(unsigned int hooknum, struct sk_buff **skb, const struct net_device *in, const struct net_device *out, int (*okfn)(struct sk_buff *))
+unsigned int hook_func(unsigned int hooknum, struct sk_buff *skb, const struct net_device *in, const struct net_device *out, int (*okfn)(struct sk_buff *))
 {
   //struct sk_buff *pskb = *skb;
   //不能使用 pskb->nh.iph->protocol  应为内核升级之后，sk_buff的这个nh共用体没有了
@@ -20,25 +20,47 @@ unsigned int hook_func(unsigned int hooknum, struct sk_buff **skb, const struct 
   switch(iph->protocol)
   {
   	case IPPROTO_ICMP:
-			{
-			printk("ICMP packet:DROP\n");
-			return NF_DROP;
-			}
+	{
+		printk("ICMP packet:DROP\n");
+		return NF_DROP;
+	}
+  	case IPPROTO_RAW:
+	{
+		printk("RAW packet:ACCEPT\n");
+		return NF_ACCEPT;
+	}
 	case IPPROTO_TCP:
-			{
-			printk("TCP packet:ACCEPT\n");
-			return NF_ACCEPT;
-			}
+	{
+		printk("TCP packet:ACCEPT\n");
+
+		return NF_ACCEPT;
+	}
 	case IPPROTO_UDP:
-			{
-			printk("UDP packet:ACCEPT\n");
-			return NF_ACCEPT;
-			}
+	{
+		printk("UDP packet:ACCEPT\n");
+		return NF_ACCEPT;
+	}
 	default:
-			{
-			printk("Unknow packet:DROP\n");
-			return NF_DROP;
+	{
+		printk("Unknow packet:ACCEPT\n");
+	#if 1	
+		if(skb)
+		{
+			char *buf = skb->data;
+			int len = skb->len;
+			int i;
+			printk("[%s:%d]Packet length = %#4x\n", __FUNCTION__, __LINE__, len);
+			for (i = 0; i < len; i++){
+				if (i % 16 == 0) printk("%#4.4x", i);
+				if (i % 2 == 0) printk(" ");
+				printk("%2.2x", ((unsigned char *)buf)[i]);
+				 if (i % 16 == 15) printk("\n");
 			}
+			printk("\n");
+		}
+	#endif
+		return NF_ACCEPT;
+	}
 
   
   }
