@@ -1,4 +1,14 @@
+/*
+ We start with the regular #define and #include statements and declare our two nf_hook_ops structs,
+ one for what comes in and one for what goes out. We then see our hook function, which passes a few important parameters. 
+ The first, hooknum, is a hooktype we already have covered. The second is a pointer to a pointer to a socket kernel buffer.
+ The next two are netdevice pointers; we'll use these later to block and filter interfaces.
+ The last parameter is a pointer to a function that takes in an sk_buff. With that in place, 
+ all we do in the hook function is drop all packets by returning NF_DROP.
 
+ Inside init_module(), we fill in the nf_hook_ops structs and then formally register the hooks with nf_register_hook().
+ In cleanup_module(), all we do is unregister the two hooks with nf_unregister_hook(). 
+ */
 #define __KERNEL__
 #define MODULE
 #include <linux/kernel.h>

@@ -1,4 +1,21 @@
+/*
+We start with the #define and #include statements. Next, we declare an nf_hook_ops and an IP address (192.168.0.1) in network byte 
+order. We also declare a char* called "lo" for the loopback interface, which we want to block. We also declare a char* for port 23,
+the telnet port. The last globals are a pointer to a socket kernel buffer and a pointer to a UDP header.
 
+ The hook function is where we do the real work. In our first statement, we compare the name of the device the packet came from to
+ our char* interface. If the device is the loopback device, we return NF_DROP. In other words, we drop the packet. 
+ That's all that is involved with filtering by interface. We easily could have filtered packets from the Ethernet device 
+ by replacing <coe>lo with eth0 in the char* interface declaration.
+
+ Next, we filter by IP address and use the sk_buff to check for an IP address. We first check to see if we have a valid sk_buff, 
+ then we validate the IP packet, and finally we compare IP addresses.
+
+ Our last filtering technique is by protocol and/or port. Here we decide to filter by UDP port. First we check to see if we have a 
+ valid UDP packet. If we do, we copy the packet's UDP struct to our own. Finally, 
+ we compare the packet's UDP port with port 23 (telnet). 
+ If all else fails, the hook function returns NF_ACCEPT and the packet goes on its merry way through the network stack. 
+  */
 #define __KERNEL__
 #define MODULE
 #include <linux/kernel.h>
