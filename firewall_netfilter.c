@@ -18,6 +18,10 @@ the telnet port. The last globals are a pointer to a socket kernel buffer and a 
   */
 #define __KERNEL__
 #define MODULE
+//dump_stack()所需下面两个头文件
+#include <linux/kprobes.h>  
+#include <asm/traps.h>      
+
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/netdevice.h>
@@ -41,6 +45,7 @@ unsigned int main_hook(unsigned int hooknum,
                   int (*okfn)(struct sk_buff*))
 {
 	const struct iphdr *iph = ip_hdr(skb);
+	dump_stack();
 	if(strcmp(in->name,interface) == 0){ return NF_DROP; }     
 	//sock_buff = skb;
     if(!skb){ return NF_ACCEPT; }                   
@@ -65,3 +70,22 @@ void cleanup_module()
 {
 	nf_unregister_hook(&netfilter_ops); /*unregister NF_IP_PRE_ROUTING hook*/
 }
+
+/*
+ *
+ [16766.064000] Call Trace:
+ [16766.068000] [<8100a9fc>] show_stack+0x48/0x70
+ [16766.076000] [<c2ce002c>] main_hook+0x2c/0xf0 [hello_netfilter]
+ [16766.088000] [<812ce234>] nf_iterate+0xa4/0x110
+ [16766.100000] [<812ce330>] nf_hook_slow+0x90/0x170
+ [16766.108000] [<812e2cb4>] ip_rcv+0x480/0x56c
+ [16766.116000] [<812a1d20>] __netif_receive_skb_core+0x868/0x964
+ [16766.128000] [<812a2a4c>] process_backlog+0xc4/0x1cc
+ [16766.136000] [<812a2838>] net_rx_action+0xac/0x1fc
+ [16766.148000] [<81030e64>] __do_softirq+0x11c/0x220
+ [16766.156000] [<8103128c>] irq_exit+0x64/0x80
+ [16766.164000] [<810053d0>] ret_from_irq+0x0/0x4
+ [16766.172000] [<810070a8>] __pastwait+0x0/0x8
+ [16766.180000] [<810631d8>] cpu_startup_entry+0x10c/0x164
+ *
+ */
