@@ -41,3 +41,12 @@ int filp_close(struct file*filp, fl_owner_t id);
 ````
 ## 内核模块
 //内核模块名是obj-m := hell.o 确定的
+## 一种内核调试方法(dump_stack)
+需要两个头文件
+#include <linux/kprobes.h>
+#include <asm/traps.h>
+
+在需要的地方加入
+dump_stack()
+
+
