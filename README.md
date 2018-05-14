@@ -26,4 +26,17 @@ static inline struct proc_dir_entry *proc_create(
 			return proc_create_data(name, mode, parent, proc_fops, NULL);
 }
 ````
+## 内核文件读写
+````
+//打开文件
+strcut file* filp_open(const char* filename, int open_mode, int mode);
+//该函数返回strcut file*结构指针，供后继函数操作使用，该返回值用IS_ERR()来检验其有效性。
+
+//读写文件
+ssize_t vfs_read(struct file* filp, char __user* buffer, size_t len, loff_t* pos);
+ssize_t vfs_write(struct file* filp, const char __user* buffer, size_t len, loff_t* pos);
+
+//关闭文件
+int filp_close(struct file*filp, fl_owner_t id);
+````
 
