@@ -39,4 +39,5 @@ ssize_t vfs_write(struct file* filp, const char __user* buffer, size_t len, loff
 //关闭文件
 int filp_close(struct file*filp, fl_owner_t id);
 ````
-
+## 内核模块
+//内核模块名是obj-m := hell.o 确定的
