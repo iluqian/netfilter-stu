@@ -33,9 +33,9 @@ enum nf_inet_hooks {
 	NF_INET_NUMHOOKS
 };
 /* Responses from hook functions. */
-#define NF_DROP 0 //Discard the packet
-#define NF_ACCEPT 1 // Keep the packet and execute the remaining hooks
+#define NF_DROP 0 //Discard the packet 丢弃释放资源
+#define NF_ACCEPT 1 // Keep the packet and execute the remaining hooks  进入链中后续的hook点
 #define NF_STOLEN 2 // Forget about the packet
-#define NF_QUEUE 3 //Queue packet for userspace
+#define NF_QUEUE 3 //Queue packet for userspace      
 #define NF_REPEAT 4 // Call this hook function again
-#define NF_STOP 5  //Keep the packet and skip the remaining hooks
+#define NF_STOP 5  //Keep the packet and skip the remaining hooks   不再进入链中后续的hook点
