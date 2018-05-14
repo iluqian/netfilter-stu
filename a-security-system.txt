@@ -1,0 +1,63 @@
+
+安全完整的系统：
+
+1. 防火墙（Netfilter/Iptables ， IPSET， ebtables， arptables）
+
+2. 入侵检测系统（Snort）
+
+3. 弱点评估工具（Nmap，Nessus）
+
+检测root 是否用 ssh  sudo来操作
+-------------------------------------------
+
+linux下后门检测工具
+
+rootkit（后门检测工具） RKHunter
+文件级别
+内核级别
+
+vim /etc/crontab
+        --check --skip-keypress
+        --check --cronjob
+
+服务器攻击后          （iptables）
+1. 断网
+2. 查找攻击源（系统日志，）
+3. 分析入侵原因和途径（系统漏洞和程序漏洞）
+4. 备份用户数据
+5. 重装系统
+6. 修复程序或系统漏洞
+7. 恢复数据和网络
+
+二. 检查可疑用户：
+	w
+三. 查看你系统日志   /var/log/message	/root/.bash_history    /var/log/secure
+四. 检查并关闭可疑进程      pidof 进程名
+	查找进程对应的路径
+root@kali:~# ls -l /proc/481/exe
+lrwxrwxrwx 1 root root 0 2月   3 16:18 /proc/481/exe -> /opt/nessus/sbin/nessusd
+oot@kali:~# ls -l /proc/481/fd
+总用量 0
+lr-x------ 1 root root 64 2月   3 17:33 0 -> /dev/null
+l-wx------ 1 root root 64 2月   3 17:33 1 -> /opt/nessus/var/nessus/logs/nessusd.dump
+lrwx------ 1 root root 64 2月   3 17:33 10 -> 'socket:[19001]'
+lr-x------ 1 root root 64 2月   3 17:33 11 -> 'pipe:[16191]'
+lr-x------ 1 root root 64 2月   3 17:33 12 -> /opt/nessus/var/nessus/plugins-desc.db.1517645979351967329
+lrwx------ 1 root root 64 2月   3 17:33 13 -> /opt/nessus/etc/nessus/nessusd.db
+lrwx------ 1 root root 64 2月   3 17:33 14 -> /opt/nessus/var/nessus/plugins-attributes.db
+lrwx------ 1 root root 64 2月   3 17:33 15 -> /opt/nessus/var/nessus/global.db
+l-wx------ 1 root root 64 2月   3 17:33 16 -> 'pipe:[16191]'
+lrwx------ 1 root root 64 2月   3 17:33 17 -> /opt/nessus/var/nessus/global.db-wal
+lrwx------ 1 root root 64 2月   3 17:33 18 -> /opt/nessus/var/nessus/global.db-shm
+l-wx------ 1 root root  64 2月   3 17:33 2 -> /opt/nessus/var/nessus/logs/nessusd.dump
+l-wx------ 1 root root 64 2月   3 17:52 20 -> /opt/nessus/var/nessus/logs/www_server.log
+l-wx------ 1 root root 64 2月   3 17:33 3 -> /opt/nessus/var/nessus/logs/nessusd.messages
+lrwx------ 1 root root 64 2月   3 17:33 4 -> 'socket:[15140]'
+lr-x------ 1 root root 64 2月   3 17:33 5 -> /opt/nessus/var/nessus/plugins-code.db.15176459481368444611
+lr-x------ 1 root root 64 2月   3 17:33 6 -> 'pipe:[15999]'
+l-wx------ 1 root root 64 2月   3 17:33 7 -> 'pipe:[15999]'
+lrwx------ 1 root root 64 2月   3 17:33 8 -> 'socket:[19000]'
+l-wx------ 1 root root 64 2月   3 17:33 9 -> /opt/nessus/var/nessus/logs/backend.log
+
+五. 检查文件系统的完整性  RKHunter   （如果ps被替换，1. 找相同版本的文件拷贝；2. 重新安装ps）
+六. 重新安装系统恢复数据，  
