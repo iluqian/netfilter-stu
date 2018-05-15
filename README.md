@@ -5,6 +5,7 @@
 
 以下代码是当我需要获取协议类型的时候，作的参考 /drivers/net/ethernet/realtek/8139cp.c
 ````
+		//首先我搜索的关键字是 IPPROTO_TCP,看看现有内核代码是如何调用的
 		const struct iphdr *ip = ip_hdr(skb);
 			if (ip->protocol == IPPROTO_TCP)
 				flags |= IPCS | TCPCS;
